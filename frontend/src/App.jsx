@@ -1,11 +1,15 @@
 import './App.css'
+import { PingComponent } from './components/atoms/pingComponent';
 
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
-    <>Hello</>
+    <>
+      Hello
+    </>
   )
+
 }
 
 export default App
