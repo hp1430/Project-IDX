@@ -1,13 +1,14 @@
+import { Route, Routes } from 'react-router-dom';
 import './App.css'
-import { PingComponent } from './components/atoms/pingComponent';
+import { CreateProject } from './pages/CreateProject';
 
 function App() {
   
 
   return (
-    <>
-      Hello
-    </>
+    <Routes>
+      <Route path="/" element={<CreateProject />} />
+    </Routes>
   )
 
 }
