@@ -45,6 +45,7 @@ export const CreateProject = () => {
         try {
             const response = await createProjectMutation();
             console.log("Now we should redirect to the editor")
+            console.log(response)
             navigate(`/projects/${response.data}`);
         }
         catch(error) {
