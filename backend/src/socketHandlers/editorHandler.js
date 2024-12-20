@@ -18,13 +18,13 @@ export const handleEditorSocketEvents = (socket, editorNamespace) => {
     });
 
     socket.on("createFile", async ({ pathToFileOrFolder }) => {
-        const isFileAlreadyPresent = await fs.stat(pathToFileOrFolder);
-        if(isFileAlreadyPresent) {
-            socket.emit("error", {
-                data: "File already exists",
-            })
-            return;
-        }
+        // const isFileAlreadyPresent = await fs.stat(pathToFileOrFolder);
+        // if(isFileAlreadyPresent) {
+        //     socket.emit("error", {
+        //         data: "File already exists",
+        //     })
+        //     return;
+        // }
         
         try {
             const response = await fs.writeFile(pathToFileOrFolder, "");
@@ -35,7 +35,7 @@ export const handleEditorSocketEvents = (socket, editorNamespace) => {
         catch(error) {
             console.log("Error creating the file", error);
             socket.emit("error", {
-                data: "Error creating the file",
+                data: "Error creating the file...",
             });
         }
     })

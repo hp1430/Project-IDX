@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { useActiveFileTabStore } from "./activeFileTabStore";
 import { useTreeStructureStore } from "./treeStructureStore";
+import { useFolderContextMenuStore } from "./folderContextMenuStore";
+import { useFileContextMenuStore } from "./fileContextMenuStore";
 
 export const useEditorSocketStore = create((set) => ({
     editorSocket: null,
@@ -8,6 +10,8 @@ export const useEditorSocketStore = create((set) => ({
 
         const activeFileTabSetter = useActiveFileTabStore.getState().setActiveFileTab;
         const projectTreeStructureSetter = useTreeStructureStore.getState().setTreeStructure;
+        const setIsOpenFolder = useFolderContextMenuStore.getState().setIsOpen;
+        const setIsOpenFile = useFileContextMenuStore.getState().setIsOpen;
 
         incomingSocket?.on("readFileSuccess", (data) => {
             console.log("Read file success ", data);
@@ -23,7 +27,21 @@ export const useEditorSocketStore = create((set) => ({
         })
 
         incomingSocket?.on("deleteFileSuccess", () => {
+            setIsOpenFile(false);
             projectTreeStructureSetter();
+        })
+
+        incomingSocket?.on("DeleteFolderSuccess", () => {
+            setIsOpenFolder(false);
+            projectTreeStructureSetter();
+        })
+
+        incomingSocket?.on("creteFileSuccess", (data) => {
+            console.log(data);
+            projectTreeStructureSetter();
+        })
+        incomingSocket?.on("error", (data) => {
+            console.log(data);
         })
 
         set({
