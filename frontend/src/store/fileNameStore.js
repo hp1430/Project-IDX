@@ -6,6 +6,7 @@ export const useFileNameStore = create((set) => ({
     fileName: null,
     isVisible: false,
     path: null,
+    action: null,
     setX: (incomingX) => {
         set({
             x: incomingX
@@ -29,6 +30,11 @@ export const useFileNameStore = create((set) => ({
     setPath: (incomingPath) => {
         set({
             path: incomingPath
+        });
+    },
+    setAction: (incomingAction) => {
+        set({
+            action: incomingAction
         });
     }
 }))

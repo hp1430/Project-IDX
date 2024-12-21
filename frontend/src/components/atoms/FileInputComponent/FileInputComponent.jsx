@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './FileInputComponent.css'
 import { useFileNameStore } from '../../../store/fileNameStore';
 import { useEditorSocketStore } from '../../../store/editorSocketStore';
@@ -7,20 +7,37 @@ export const FileInputComponent = ({ x, y }) => {
 
     const [name, setName] = useState("");
 
-    const { setFileName, setIsVisible, path } = useFileNameStore();
+    const { setFileName, setIsVisible, path, action, setAction } = useFileNameStore();
 
     const { editorSocket } = useEditorSocketStore();
 
 
     function handleSubmit() {
-        const fileNameWithExtension = name.trim().includes('.') ? name : `${name}.txt`;
-        const newPath = path.concat("/", fileNameWithExtension)
-        setFileName(name);
-        editorSocket.emit("createFile", {
-            pathToFileOrFolder: newPath
-        })
-        setIsVisible(false);
-        console.log("New file is created at ", newPath);
+        if(action==="createFile") {
+            const fileNameWithExtension = name.trim().includes('.') ? name : `${name}.txt`;
+            const newPath = path.concat("/", fileNameWithExtension)
+            setFileName(name);
+            editorSocket.emit("createFile", {
+                pathToFileOrFolder: newPath
+            })
+            setIsVisible(false);
+            console.log("New file is created at ", newPath);
+        }
+        else {
+            const oldPath = path;
+            //const fileNameWithExtension = name.trim();
+            const newPath = oldPath?.split(/[\\/]/).slice(0, -1).join('/').concat("/", name.trim());
+            console.log("Old path: ", oldPath);
+            console.log("New path: ", newPath);
+            
+            setFileName(name);
+            editorSocket.emit("renameFile", {
+                oldPath: oldPath,
+                newPath: newPath
+            })
+            setAction(null);
+            setIsVisible(false);
+        }
     }
 
     return (

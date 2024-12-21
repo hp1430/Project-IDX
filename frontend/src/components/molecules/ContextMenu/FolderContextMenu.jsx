@@ -14,7 +14,7 @@ export const FolderContextMenu = ({
 
     const { editorSocket } = useEditorSocketStore();
 
-    const { setX, setY, setIsVisible, setPath } = useFileNameStore();
+    const { setX, setY, setIsVisible, setPath, setAction } = useFileNameStore();
 
     function handleFolderDelete(e) {
         e.preventDefault();
@@ -29,7 +29,17 @@ export const FolderContextMenu = ({
         setX(e.clientX);
         setY(e.clientY);
         setPath(path);
+        setAction("createFile");
     }
+
+    function handleFolderRename(e) {
+        setIsVisible(true);
+        setX(e.clientX);
+        setY(e.clientY);
+        setPath(path);
+        setAction("rename");
+    }
+    
     return (
         <div
             className="folderContextOptionWrapper"
@@ -53,6 +63,7 @@ export const FolderContextMenu = ({
                 Delete Folder</button>
             <button
                 className="folderContextButton"
+                onClick={handleFolderRename}
             >
                 Rename Folder</button>
         </div>

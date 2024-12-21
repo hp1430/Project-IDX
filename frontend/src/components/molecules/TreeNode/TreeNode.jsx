@@ -4,6 +4,7 @@ import { FileIcon } from "../../atoms/FileIcon/FileIcon";
 import { useEditorSocketStore } from "../../../store/editorSocketStore";
 import { useFileContextMenuStore } from "../../../store/fileContextMenuStore";
 import { useFolderContextMenuStore } from "../../../store/folderContextMenuStore";
+import { useFileNameStore } from "../../../store/fileNameStore";
 
 export const TreeNode = ({
     fileFolderData
@@ -12,6 +13,8 @@ export const TreeNode = ({
     const [visibility, setVisibility] = useState({});
 
     const { editorSocket } = useEditorSocketStore();
+
+    const { setPath } = useFileNameStore();
 
     const {
         setFile,
@@ -51,6 +54,7 @@ export const TreeNode = ({
         setFileContextMenuX(e.clientX);
         setFileContextMenuY(e.clientY);
         setFileContextMenuIsOpen(true);
+        setPath(path);
     }
 
     function handleContextMenuForFolders(e, path) {

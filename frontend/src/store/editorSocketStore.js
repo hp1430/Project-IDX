@@ -28,11 +28,13 @@ export const useEditorSocketStore = create((set) => ({
 
         incomingSocket?.on("deleteFileSuccess", () => {
             setIsOpenFile(false);
+            activeFileTabSetter(null);
             projectTreeStructureSetter();
         })
 
         incomingSocket?.on("DeleteFolderSuccess", () => {
             setIsOpenFolder(false);
+            activeFileTabSetter(null);
             projectTreeStructureSetter();
         })
 
@@ -40,6 +42,11 @@ export const useEditorSocketStore = create((set) => ({
             console.log(data);
             projectTreeStructureSetter();
         })
+
+        incomingSocket?.on("renameFileSuccess", () => {
+            projectTreeStructureSetter();
+        })
+
         incomingSocket?.on("error", (data) => {
             console.log(data);
         })
