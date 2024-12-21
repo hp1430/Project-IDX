@@ -39,7 +39,15 @@ export const FolderContextMenu = ({
         setPath(path);
         setAction("rename");
     }
-    
+
+    function handleCreateFolder(e) {
+        setIsVisible(true);
+        setX(e.clientX);
+        setY(e.clientY);
+        setPath(path);
+        setAction("createFolder");
+    }
+
     return (
         <div
             className="folderContextOptionWrapper"
@@ -55,7 +63,16 @@ export const FolderContextMenu = ({
                 className="folderContextButton"
                 onClick={handleFolderCreateFile}
             >
-                Create File</button>
+                Create File
+            </button>
+            
+            <button
+                className="folderContextButton"
+                onClick={handleCreateFolder}
+            >
+                Create Folder
+            </button>
+
             <button
                 className="folderContextButton"
                 onClick={handleFolderDelete}

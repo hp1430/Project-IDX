@@ -23,6 +23,15 @@ export const FileInputComponent = ({ x, y }) => {
             setIsVisible(false);
             console.log("New file is created at ", newPath);
         }
+        else if(action==="createFolder") {
+            const newPath = path.concat("/", name.trim());
+            setFileName(name);
+            editorSocket.emit("createFolder", {
+                pathToFileOrFolder: newPath
+            })
+            setIsVisible(false);
+            console.log("New folder is created at ", newPath);
+        }
         else {
             const oldPath = path;
             //const fileNameWithExtension = name.trim();
