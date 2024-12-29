@@ -5,9 +5,10 @@ import { Server } from 'socket.io';
 import apiRouter from './routes/index.js';
 import { PORT } from './config/serverConfig.js';
 import chokidar from 'chokidar';
-import path from 'path';
 import { handleEditorSocketEvents } from './socketHandlers/editorHandler.js';
-import { handleContainerCreate } from './containers/handleContainerCreate.js';
+import { handleContainerCreate, listContainer } from './containers/handleContainerCreate.js';
+import { WebSocketServer } from 'ws';
+import { handleTerminalCreation } from './containers/handleTerminalCreation.js';
 
 const app = express();
 const server = createServer(app);
@@ -56,7 +57,13 @@ editorNamespace.on("connection", (socket) => {
         watcher.on("all", (event, path) => {
             console.log(event, path);
         })
+
     }
+
+    socket.on("getPort", () =>{
+        console.log("get port event received");
+        listContainer();
+    })
 
     handleEditorSocketEvents(socket, editorNamespace);
 
@@ -67,24 +74,49 @@ editorNamespace.on("connection", (socket) => {
 
 })
 
-const terminalNamespace = io.of('/terminal');
-terminalNamespace.on("connection", (socket) => {
-    console.log("Terminal connected");
-
-    let projectId = socket.handshake.query['projectId'];
-
-    // socket.on("shell-input", (data) => {
-    //     console.log("Shell input received", data);
-    //     terminalNamespace.emit("shell-output", data);
-    // })
-
-    socket.on("disconnect", () => {
-        console.log("Terminal disconnected");
-    });
-
-    handleContainerCreate(projectId, socket);
-})
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
+
+const webSocketForTerminal = new WebSocketServer({ 
+    noServer: true  // we will handle the server ourselves
+});
+
+server.on("upgrade", (req, tcp, head) => {
+    /**
+     * req: Incoming http request
+     * socket: TCP Socket
+     * head: Buffer containing the first packet of the upgraded stream
+     */
+    // This callback will be called when a client tries to connect to the server through websocket
+
+    const isTerminal = req.url.includes("/terminal");
+
+    if(isTerminal) {
+        console.log("request url received", req.url);
+        const projectId = req.url.split("=")[1];
+        console.log("Project id received for terminal", projectId);
+
+        handleContainerCreate(projectId, webSocketForTerminal, req, tcp, head);
+    }
+});
+
+webSocketForTerminal.on("connection", (ws, req, container) => {
+    console.log("Terminal connected");
+    handleTerminalCreation(container, ws);
+
+    ws.on("getPort", () => {
+        console.log("get port event received");
+    })
+    ws.on("close", () => {
+        container.remove({force: true}, (err, data) => {
+            if(err) {
+                console.log("Error removing container", err);
+            }
+            else {
+                console.log("Container removed successfully", data);
+            }
+        });
+    })
+});
