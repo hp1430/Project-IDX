@@ -6,9 +6,6 @@ import apiRouter from './routes/index.js';
 import { PORT } from './config/serverConfig.js';
 import chokidar from 'chokidar';
 import { handleEditorSocketEvents } from './socketHandlers/editorHandler.js';
-import { handleContainerCreate, listContainer } from './containers/handleContainerCreate.js';
-import { WebSocketServer } from 'ws';
-import { handleTerminalCreation } from './containers/handleTerminalCreation.js';
 
 const app = express();
 const server = createServer(app);
@@ -60,17 +57,13 @@ editorNamespace.on("connection", (socket) => {
 
     }
 
-    socket.on("getPort", () =>{
-        console.log("get port event received");
-        listContainer();
-    })
 
     handleEditorSocketEvents(socket, editorNamespace);
 
-    socket.on("disconnect", async () => {
-        await watcher.close();
-        console.log("Editor disconnected");
-    })
+    // socket.on("disconnect", async () => {
+    //     await watcher.close();
+    //     console.log("Editor disconnected");
+    // })
 
 })
 
@@ -78,45 +71,3 @@ editorNamespace.on("connection", (socket) => {
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
-
-const webSocketForTerminal = new WebSocketServer({ 
-    noServer: true  // we will handle the server ourselves
-});
-
-server.on("upgrade", (req, tcp, head) => {
-    /**
-     * req: Incoming http request
-     * socket: TCP Socket
-     * head: Buffer containing the first packet of the upgraded stream
-     */
-    // This callback will be called when a client tries to connect to the server through websocket
-
-    const isTerminal = req.url.includes("/terminal");
-
-    if(isTerminal) {
-        console.log("request url received", req.url);
-        const projectId = req.url.split("=")[1];
-        console.log("Project id received for terminal", projectId);
-
-        handleContainerCreate(projectId, webSocketForTerminal, req, tcp, head);
-    }
-});
-
-webSocketForTerminal.on("connection", (ws, req, container) => {
-    console.log("Terminal connected");
-    handleTerminalCreation(container, ws);
-
-    ws.on("getPort", () => {
-        console.log("get port event received");
-    })
-    ws.on("close", () => {
-        container.remove({force: true}, (err, data) => {
-            if(err) {
-                console.log("Error removing container", err);
-            }
-            else {
-                console.log("Container removed successfully", data);
-            }
-        });
-    })
-});

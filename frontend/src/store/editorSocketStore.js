@@ -3,6 +3,7 @@ import { useActiveFileTabStore } from "./activeFileTabStore";
 import { useTreeStructureStore } from "./treeStructureStore";
 import { useFolderContextMenuStore } from "./folderContextMenuStore";
 import { useFileContextMenuStore } from "./fileContextMenuStore";
+import { usePortStore } from "./portStore";
 
 export const useEditorSocketStore = create((set) => ({
     editorSocket: null,
@@ -12,6 +13,7 @@ export const useEditorSocketStore = create((set) => ({
         const projectTreeStructureSetter = useTreeStructureStore.getState().setTreeStructure;
         const setIsOpenFolder = useFolderContextMenuStore.getState().setIsOpen;
         const setIsOpenFile = useFileContextMenuStore.getState().setIsOpen;
+        const portSetter = usePortStore.getState().setPort;
 
         incomingSocket?.on("readFileSuccess", (data) => {
             console.log("Read file success ", data);
@@ -55,6 +57,11 @@ export const useEditorSocketStore = create((set) => ({
         incomingSocket?.on("error", (data) => {
             console.log(data);
         })
+
+        incomingSocket?.on("getPortSuccess", ({ port }) => {
+            console.log("Port is ", port);
+            portSetter(port);
+        });
 
         set({
             editorSocket: incomingSocket
