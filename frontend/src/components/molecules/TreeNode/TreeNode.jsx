@@ -5,6 +5,7 @@ import { useEditorSocketStore } from "../../../store/editorSocketStore";
 import { useFileContextMenuStore } from "../../../store/fileContextMenuStore";
 import { useFolderContextMenuStore } from "../../../store/folderContextMenuStore";
 import { useFileNameStore } from "../../../store/fileNameStore";
+import './TreeNode.css'
 
 export const TreeNode = ({
     fileFolderData
@@ -44,7 +45,7 @@ export const TreeNode = ({
 
     function handleDoubleClick(fileFolderData) {
         editorSocket.emit("readFile", {
-            pathToFileOrFolder: fileFolderData.path
+            pathToFileOrFolder: fileFolderData.path,
         })
     }
 
@@ -97,7 +98,8 @@ export const TreeNode = ({
                 </button>
             ) : (
                 // If the current node is not a folder, render it as a p tag
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "start"}}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "start", marginLeft: "18px"
+                }} className="treenode">
                     <FileIcon extension={computeExtension(fileFolderData)} />
                     <p
                         style={{
@@ -105,9 +107,8 @@ export const TreeNode = ({
                             paddingBottom: "15px",
                             fontSize: "15px",
                             cursor: "pointer",
-                            marginLeft: "15px",
+                            marginLeft: "5px",
                             color: "white",
-                            marginTop: "8px"
                         }}
                         onContextMenu={(e) => handleContextMenuForFiles(e, fileFolderData.path)}
                         onDoubleClick={() => handleDoubleClick(fileFolderData)}

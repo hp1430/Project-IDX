@@ -8,8 +8,6 @@ import { useTerminalSocketStore } from '../../../store/terminalSocketStore';
 export const BrowserTerminal = () => {
 
     const terminalRef = useRef(null);
-    //const socket = useRef(null);
-    //const {projectId: projectIdFromUrl} = useParams();
 
     const { terminalSocket } = useTerminalSocketStore();
 
@@ -40,7 +38,6 @@ export const BrowserTerminal = () => {
             terminalSocket.onopen = () => {
                 const attachAddon = new AttachAddon(terminalSocket);
                 term.loadAddon(attachAddon);
-                //socket.current = ws;
             }
         }
 
@@ -54,7 +51,6 @@ export const BrowserTerminal = () => {
             ref={terminalRef}
             style={{
                 width: "100vw",
-               // overflow: "auto",
             }}
             className='terminal'
             id='terminal-container'

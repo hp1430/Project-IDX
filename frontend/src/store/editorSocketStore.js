@@ -4,6 +4,7 @@ import { useTreeStructureStore } from "./treeStructureStore";
 import { useFolderContextMenuStore } from "./folderContextMenuStore";
 import { useFileContextMenuStore } from "./fileContextMenuStore";
 import { usePortStore } from "./portStore";
+import { useActiveFilesStore } from "./activeFilesStore";
 
 export const useEditorSocketStore = create((set) => ({
     editorSocket: null,
@@ -14,11 +15,27 @@ export const useEditorSocketStore = create((set) => ({
         const setIsOpenFolder = useFolderContextMenuStore.getState().setIsOpen;
         const setIsOpenFile = useFileContextMenuStore.getState().setIsOpen;
         const portSetter = usePortStore.getState().setPort;
+        const filesSetter = useActiveFilesStore.getState().setActiveFiles;
 
         incomingSocket?.on("readFileSuccess", (data) => {
             console.log("Read file success ", data);
             const fileExtension = data.path.split('.').pop();
             activeFileTabSetter(data.path, data.value, fileExtension);
+
+            let filePath = data.path;
+            filePath = filePath.replace(/\\/g, "\\\\");
+            
+            const activeFiles = useActiveFilesStore.getState().activeFiles;
+
+            const isFileAlreadyActive = activeFiles.some(file => file.path === data.path);
+            
+            if(!isFileAlreadyActive) {
+                filesSetter({
+                    name: filePath.split("\\").pop(),
+                    path: data.path,
+                    action: "add"
+                })
+            }
         })
 
         incomingSocket?.on("writeFileSuccess", (data) => {

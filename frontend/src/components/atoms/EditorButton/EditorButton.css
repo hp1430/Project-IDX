@@ -2,11 +2,25 @@
     outline: none;
     background-color: #303242;
     font-size: 14px;
-    height: 30px;
+    height: 40px;
     border-left: none;
     border-bottom: none;
+    border-right: none;
     border-top: 1px solid #f7b9dd;
     color: white;
     min-width: 100px;
     padding: 3px 7px 3px 7px;
+    cursor: pointer;
+}
+
+.close-icon{
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    outline: none;
+    background-color: #303242;
+    border-right: 2px solid black;
+    padding-Top: 10px;
+    padding-Bottom: 10px;
+    padding-Right: 5px;
 }

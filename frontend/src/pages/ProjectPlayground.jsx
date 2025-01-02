@@ -10,7 +10,7 @@ import { useTerminalSocketStore } from "../store/terminalSocketStore";
 import { Browser } from "../components/organisms/Browser/Browser";
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
-import { Divider } from "antd";
+import { ActiveFiles } from "../components/molecules/ActiveFiles/ActiveFiles";
 
 export const ProjectPlayground = () => {
 
@@ -85,6 +85,7 @@ export const ProjectPlayground = () => {
                                 backgroundColor: "#282a36",
                             }}
                         >
+                            <ActiveFiles />
                             <Allotment
                                 vertical={true}
                             >
@@ -96,7 +97,20 @@ export const ProjectPlayground = () => {
 
                         </div>
                         <div>
-                            <button onClick={() => setLoadBrowser(true)}>
+                            <button 
+                                onClick={() => setLoadBrowser(true)}
+                                style={{
+                                    backgroundColor: "#333254",
+                                    color: "white",
+                                    border: "none",
+                                    padding: "10px",
+                                    cursor: "pointer",
+                                    outline: "none",
+                                    width: "100%",
+                                    textAlign: "center"
+                                    
+                                }}
+                            >
                                 Load Browser
                             </button>
                             {loadBrowser && projectIdFromUrl && terminalSocket && <Browser projectId={projectIdFromUrl}/>}
