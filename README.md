@@ -45,12 +45,12 @@ To get a copy of this project up and running locally, follow the steps below.
 4.  ```bash
     cd backend
     ```
-    Create .env file at bakend and create variables PORT, REACT_PROJECT_COMMAND='npm create vite@latest sandbox -- --template react' and TERMINAL_PORT;
+    Create .env file at backend and create variables PORT, REACT_PROJECT_COMMAND='npm create vite@latest sandbox -- --template react' and TERMINAL_PORT;
 
 5. ```bash
     cd frontend
     ```
-    Create .env file at bakend and create variable VITE_BACKEND_URL= http://localhost:[Your Backend Port]
+    Create .env file at backend and create variable VITE_BACKEND_URL= http://localhost:[Your Backend Port]
 
 6. Start the application:
     - Start Backend: 
