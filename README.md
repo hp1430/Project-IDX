@@ -6,27 +6,24 @@ Project IDX is a online code editor and development environment that allows deve
 
 ## Features
 
-- [A browser-based code editor that supports coding apps]
-- [See real-time changes to your application with a live preview window.]
-- [An online terminal connected to a docker container in the backend.]
-- [Complete folder structure of the project created.]
-- [Create isolated sandbox development environments to test and prototype ideas.]
-- [Online code editor like vs code]
+- A browser-based code editor that supports coding apps
+- See real-time changes to your application with a live preview window.
+- An online terminal connected to a docker container in the backend.
+- Complete folder structure of the project created.
+- Create isolated sandbox development environments to test and prototype ideas.
+- Online code editor like vs code
 
 ## Technologies Used
 
-- **Frontend:** [JavaScript, React, etc.]
-- **Backend:** [Node.js, Express.js]
-- **Real-Time Communicarion:** [WebSockets]
-- **Containerization:** [Docker]
+- **Frontend:** JavaScript, React
+- **Backend:** Node.js, Express.js
+- **Real-Time Communicarion:** WebSockets
+- **Containerization:** Docker
 
 ## Setup and Installation
 
 To get a copy of this project up and running locally, follow the steps below.
 
-### Prerequisites
-
-- [List any prerequisites, such as Node.js, npm, etc.]
   
 ### Installation Steps
 
@@ -45,7 +42,17 @@ To get a copy of this project up and running locally, follow the steps below.
     npm install
     ```
 
-4. Start the application:
+4.  ```bash
+    cd backend
+    ```
+    Create .env file at bakend and create variables PORT, REACT_PROJECT_COMMAND='npm create vite@latest sandbox -- --template react' and TERMINAL_PORT;
+
+5. ```bash
+    cd frontend
+    ```
+    Create .env file at bakend and create variable VITE_BACKEND_URL= http://localhost:[Your Backend Port]
+
+6. Start the application:
     - Start Backend: 
     ```bash
     cd backend
