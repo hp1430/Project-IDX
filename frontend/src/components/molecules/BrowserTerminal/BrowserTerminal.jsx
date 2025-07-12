@@ -29,14 +29,14 @@ export const BrowserTerminal = () => {
             convertEol: true,   // convert CRLF to LF
         });
         term.open(terminalRef.current);
-        let fitAddon = new FitAddon();
+        let fitAddon = new FitAddon();  //FitAddon is used to resize the terminal to fit the container
         term.loadAddon(fitAddon);
         fitAddon.fit();
 
 
         if(terminalSocket) {
             terminalSocket.onopen = () => {
-                const attachAddon = new AttachAddon(terminalSocket);
+                const attachAddon = new AttachAddon(terminalSocket);    // AttachAddon is used to attach the terminal to a socket/terminal(docker container)
                 term.loadAddon(attachAddon);
             }
         }
