@@ -35,7 +35,7 @@ export const ProjectPlayground = () => {
             });
 
             try {
-                const ws = new WebSocket(`${import.meta.env.VITE_WEBSOCKET_URL}/terminal?projectId=`+projectIdFromUrl);
+                const ws = new WebSocket(`${import.meta.env.VITE_WEBSOCKET_URL}?projectId=`+projectIdFromUrl);
             //    editorSocket.emit("getPort", { containerName: projectIdFromUrl });
                 setTerminalSocket(ws);
             }
