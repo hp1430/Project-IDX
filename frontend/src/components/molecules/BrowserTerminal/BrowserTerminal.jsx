@@ -12,6 +12,8 @@ export const BrowserTerminal = () => {
     const { terminalSocket } = useTerminalSocketStore();
 
     useEffect(() => {
+        if (!terminalRef.current) return;
+
         const term = new Terminal({
             cursorBlink: true,
             theme: {
@@ -28,21 +30,41 @@ export const BrowserTerminal = () => {
             fontFamily: "Consolas",
             convertEol: true,   // convert CRLF to LF
         });
+        
         term.open(terminalRef.current);
         let fitAddon = new FitAddon();  //FitAddon is used to resize the terminal to fit the container
         term.loadAddon(fitAddon);
-        fitAddon.fit();
-
+        
+        // Add a small delay to ensure the terminal is properly mounted
+        setTimeout(() => {
+            try {
+                fitAddon.fit();
+            } catch (error) {
+                console.warn('Failed to fit terminal:', error);
+            }
+        }, 100);
 
         if(terminalSocket) {
             terminalSocket.onopen = () => {
-                const attachAddon = new AttachAddon(terminalSocket);    // AttachAddon is used to attach the terminal to a socket/terminal(docker container)
-                term.loadAddon(attachAddon);
+                try {
+                    const attachAddon = new AttachAddon(terminalSocket);    // AttachAddon is used to attach the terminal to a socket/terminal(docker container)
+                    term.loadAddon(attachAddon);
+                } catch (error) {
+                    console.error('Failed to attach terminal:', error);
+                }
+            }
+            
+            terminalSocket.onerror = (error) => {
+                console.error('Terminal socket error:', error);
             }
         }
 
         return () => {
-            term.dispose();
+            try {
+                term.dispose();
+            } catch (error) {
+                console.warn('Error disposing terminal:', error);
+            }
         }
     }, [terminalSocket])
 

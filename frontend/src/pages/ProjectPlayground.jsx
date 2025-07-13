@@ -35,12 +35,21 @@ export const ProjectPlayground = () => {
             });
 
             try {
-                const ws = new WebSocket(`${import.meta.env.VITE_WEBSOCKET_URL}?projectId=`+projectIdFromUrl);
-            //    editorSocket.emit("getPort", { containerName: projectIdFromUrl });
+                const wsUrl = import.meta.env.VITE_WEBSOCKET_URL || 'ws://localhost:3000';
+                const ws = new WebSocket(`${wsUrl}/terminal?projectId=${projectIdFromUrl}`);
+                
+                ws.onerror = (error) => {
+                    console.error('WebSocket connection error:', error);
+                };
+                
+                ws.onclose = () => {
+                    console.log('WebSocket connection closed');
+                };
+                
                 setTerminalSocket(ws);
             }
             catch(err) {
-                console.log(err);
+                console.error('Failed to create WebSocket connection:', err);
             }
             
             setEditorSocket(editorSocketConnection);
@@ -75,7 +84,7 @@ export const ProjectPlayground = () => {
                         height: "100vh"
                     }}
                 >
-                    <Allotment>
+                    <Allotment defaultSizes={[70, 30]}>
                         <div
                             style={{
                                 display: "flex",
@@ -88,6 +97,7 @@ export const ProjectPlayground = () => {
                             <ActiveFiles />
                             <Allotment
                                 vertical={true}
+                                defaultSizes={[70, 30]}
                             >
                                 <EditorComponent />
                                 {/* <Divider style={{color: 'white', backgroundColor: '#333254'}} plain>Terminal</Divider> */}
@@ -96,7 +106,7 @@ export const ProjectPlayground = () => {
 
 
                         </div>
-                        <div>
+                        <div style={{ minWidth: "300px" }}>
                             <button 
                                 onClick={() => setLoadBrowser(true)}
                                 style={{
